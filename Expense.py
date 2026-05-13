@@ -58,6 +58,7 @@ if not df.empty:
         filtered_df = df[df["Category"] == selected_category]
         st.dataframe(filtered_df, use_container_width=True)
 
+
 # Download option
 st.subheader("⬇️ Export Data")
 csv = df.to_csv(index=False).encode('utf-8')
