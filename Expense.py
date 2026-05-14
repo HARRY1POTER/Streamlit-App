@@ -14,18 +14,42 @@ if "data" not in st.session_state:
 # Sidebar input
 st.sidebar.header("➕ Add Expense")
 
-date = st.sidebar.date_input("Date", datetime.date.today())
-category = st.sidebar.selectbox(
-    "Category", ["Food", "Travel", "Shopping", "Bills", "Other"])
-amount = st.sidebar.number_input("Amount (₹)", min_value=0.0, format="%.2f")
-note = st.sidebar.text_input("Note")
+with st.sidebar.form("expense_form", clear_on_submit=True):
 
-if st.sidebar.button("Add Expense"):
-    new_data = pd.DataFrame([[date, category, amount, note]],
-                            columns=["Date", "Category", "Amount", "Note"])
-    st.session_state.data = pd.concat(
-        [st.session_state.data, new_data], ignore_index=True)
-    st.sidebar.success("Expense Added!")
+    date = st.date_input("Date", datetime.date.today())
+
+    category = st.selectbox(
+        "Category",
+        ["Food", "Travel", "Shopping", "Bills", "Other"]
+    )
+
+    amount = st.number_input(
+        "Amount (₹)",
+        min_value=0.0,
+        format="%.2f"
+    )
+
+    note = st.text_input("Note")
+
+    submitted = st.form_submit_button("Add Expense")
+
+    if submitted:
+
+        if amount == 0:
+            st.warning("Amount must be greater than 0")
+
+        else:
+            new_data = pd.DataFrame(
+                [[date, category, amount, note]],
+                columns=["Date", "Category", "Amount", "Note"]
+            )
+
+            st.session_state.data = pd.concat(
+                [st.session_state.data, new_data],
+                ignore_index=True
+            )
+
+            st.success("Expense Added!")
 
 df = st.session_state.data
 
